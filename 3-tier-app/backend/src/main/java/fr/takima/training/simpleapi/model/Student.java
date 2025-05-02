@@ -1,5 +1,5 @@
 package fr.takima.training.simpleapi.model;
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +14,7 @@ public class Student {
 
     @ManyToOne
     @JoinColumn(name = "department_id")
+    @JsonBackReference
     private Department department;
 
     // Getters and setters

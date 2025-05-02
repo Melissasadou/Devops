@@ -1,5 +1,5 @@
 package fr.takima.training.simpleapi.model;
-
+import com.fasterxml.jackson. annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -13,6 +13,7 @@ public class Department {
     private String name;
 
     @OneToMany(mappedBy = "department")
+    @JsonManagedReference
     private List<Student> students;
 
     // Getters and setters
