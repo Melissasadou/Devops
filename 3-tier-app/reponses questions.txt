@@ -1,0 +1,53 @@
+Question 1 : Pourquoi vaut-il mieux utiliser le flag -e pour passer les variables d'environnement plutôt que de les mettre dans le Dockerfile ?
+Réponse :
+ Utiliser le flag -e au moment de lancer le conteneur (par exemple avec docker run) permet de ne pas exposer d'informations sensibles dans l'image Docker elle-même, comme le mot de passe PostgreSQL. Si les variables sont mises dans le Dockerfile, elles sont visibles par toute personne ayant accès à l'image, ce qui pose un problème de sécurité. Le flag -e permet donc une configuration plus dynamique et sécurisée.
+Question 2 : Pourquoi avons-nous besoin d'attacher un volume à notre conteneur PostgreSQL ?
+Réponse :
+ Un volume permet de conserver les données de la base même si le conteneur est supprimé ou reconstruit. Sans volume, les données seraient effacées à chaque redémarrage du conteneur. Avec un volume (-v), les fichiers de la base sont enregistrés sur le disque de l’hôte, assurant ainsi une persistance des données.
+Question 3 : Documenter les commandes et le Dockerfile de la base de données
+Dockerfile (database/Dockerfile)
+Commandes utilisées :
+docker build -t my-database ./database
+docker run -d --name postgres-db --net=app-network my-database
+Question 4 : Pourquoi avons-nous besoin d’un build multi-étapes (multistage build) ?
+Réponse :
+ Un build multi-étapes permet de séparer la phase de compilation (build) de la phase d’exécution. Cela permet d’utiliser une image plus légère (par exemple jre au lieu de jdk) pour la production et réduire la taille de l’image finale.
+Étapes du Dockerfile :
+Étape de build : utilise une image avec JDK pour compiler l’application avec Maven.
+Étape de run : utilise une image avec JRE pour exécuter uniquement le jar compilé.
+Cela assure une meilleure sécurité et optimisation des performances.
+Question 5 : Pourquoi avons-nous besoin d’un reverse proxy ?
+Réponse :
+ Le reverse proxy permet de :
+Rediriger les requêtes HTTP entrantes vers le bon service (ici le backend).
+Centraliser l'accès (toutes les requêtes passent par Apache).
+Ajouter des fonctionnalités comme le SSL, la réécriture d’URL, ou le load balancing.
+ Dans notre cas, il est utilisé pour exposer l'application web sur le port 80 et rediriger vers le backend sur le port 8080 via ProxyPass.
+Question 6 : Pourquoi docker-compose est-il si important ?
+Réponse :
+ docker-compose permet de gérer plusieurs conteneurs de manière orchestrée à l’aide d’un seul fichier docker-compose.yml. Il facilite :
+Le lancement synchronisé des services
+La gestion des dépendances (ex : le backend dépend de la base de données)
+La configuration claire (réseaux, volumes, ports...)
+Le déploiement reproductible et portable
+Question 7 : Principales commandes docker-compose
+docker-compose build         # Construction des images
+docker-compose up -d         # Démarrage des conteneurs en arrière-plan
+docker-compose down          # Arrêt et suppression des conteneurs, réseaux, volumes
+docker-compose ps            # Voir l'état des services
+docker-compose logs -f       # Voir les logs
+
+Question 9 : Commandes pour publier les images sur Docker Hub
+docker login
+docker tag my-database zina98/my-database:1.0
+docker push zina98/my-database:1.0
+
+Question 10 : Pourquoi met-on nos images dans un dépôt en ligne ?
+Réponse :
+ Publier une image dans un registre comme Docker Hub permet de :
+Partager facilement une application entre équipes ou machines
+Déployer à distance (ex: CI/CD, cloud)
+Conserver une version spécifique avec des tags
+Faciliter la maintenance et la documentation de l’image
+Dans un contexte entreprise, cela permet une gestion centralisée et sécurisée des images avec contrôle d’accès.
+
