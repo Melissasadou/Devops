@@ -5,4 +5,4 @@ all:
   children:
     prod:
       hosts:
-        melissa-nouhad.sadou.takima.cloud
+        melissa  -nouhad.sadou.takima.cloud

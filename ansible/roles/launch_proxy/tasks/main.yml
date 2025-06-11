@@ -1,0 +1,9 @@
+- name: Lancer le conteneur httpd (reverse proxy)
+  docker_container:
+    name: proxy
+    image: melisadou/tp-devops-http-server
+    ports:
+      - "80:80"
+    networks:
+      - name: my_network
+

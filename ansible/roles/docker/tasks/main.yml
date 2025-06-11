@@ -1,0 +1,48 @@
+- name: Installer les paquets nécessaires
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - python3-venv
+    state: latest
+    update_cache: yes
+
+- name: Ajouter la clé GPG de Docker
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    state: present
+
+- name: Ajouter le dépôt Docker
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    state: present
+    update_cache: yes
+
+- name: Installer Docker
+  apt:
+    name: docker-ce
+    state: present
+
+- name: Installer Python3 et pip3
+  apt:
+    name:
+      - python3
+      - python3-pip
+    state: present
+
+- name: Créer un venv pour Docker SDK
+  command: python3 -m venv /opt/docker_venv
+  args:
+    creates: /opt/docker_venv
+
+- name: Installer Docker SDK dans le venv
+  command: /opt/docker_venv/bin/pip install docker
+
+- name: Vérifier que Docker est lancé
+  service:
+    name: docker
+    state: started
+

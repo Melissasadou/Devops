@@ -1,0 +1,21 @@
+- name: Lancer le conteneur de l’application
+  docker_container:
+    name: simple-api
+    image: melisadou/tp-devops-simple-api
+    state: started
+    restart_policy: always
+    networks:
+      - name: my_network
+    env:
+      DB_HOST: my_postgres
+      #DB_PORT: '5432'
+      DB_NAME: db
+      DB_USER: usr
+      DB_PASSWORD: pwd
+    published_ports:
+      - "8080:8080"
+
+
+
+
+
